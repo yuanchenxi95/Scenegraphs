@@ -1,0 +1,159 @@
+<scene>
+    <instance name="box" path="models/box"></instance>
+    <transform>
+        <set>
+            <translate>0 0 -20</translate>
+            <scale>5 5 5</scale>
+        </set>
+
+        <!-- transformation from bottom to up -->
+        <group name="unit-height-spider">
+            <transform>
+                <set>
+                    <scale>1 1 1</scale>
+                </set>
+                <group name="baseGroup">
+                    <group name="centerBody">
+                        <transform name="centerBody">
+                            <set>
+                                <scale>40 13 20</scale>
+                            </set>
+                            <object instanceof="box">
+                                <material>
+                                    <color>1 1 1</color>
+                                </material>
+                            </object>
+                        </transform>
+                    </group>
+                    <group name="headPart">
+                        <transform name="headPart">
+                            <set>
+                                <translate>-25 0 0</translate>
+                                <scale>10 7 17</scale>
+                            </set>
+                            <object instanceof="box">
+                                <material>
+                                    <color>1 0 0</color>
+                                </material>
+                            </object>
+                        </transform>
+                    </group>
+                    <group name="legGroup">
+                        <transform name="legLeft0">
+                            <set>
+                                <translate>0 0 10</translate>
+                                <rotate>20 1 0 0</rotate>
+                                <translate>0 0 10</translate>
+                                <translate>-15 0 0</translate>
+                                <scale>5 5 20</scale>
+                            </set>
+                            <object instanceof="box">
+                                <material>
+                                    <color>1 0 0</color>
+                                </material>
+                            </object>
+                        </transform>
+                        <transform name="legRight0">
+                            <set>
+                                <translate>0 0 -10</translate>
+                                <rotate>-20 1 0 0</rotate>
+                                <translate>0 0 -10</translate>
+                                <translate>-15 0 0</translate>
+                                <scale>5 5 20</scale>
+                            </set>
+                            <object instanceof="box">
+                                <material>
+                                    <color>1 0 0</color>
+                                </material>
+                            </object>
+                        </transform>
+                        <transform name="legLeft1">
+                            <set>
+                                <translate>0 0 10</translate>
+                                <rotate>20 1 0 0</rotate>
+                                <translate>0 0 10</translate>
+                                <translate>-5 0 0</translate>
+                                <scale>5 5 20</scale>
+                            </set>
+                            <object instanceof="box">
+                                <material>
+                                    <color>1 0 0</color>
+                                </material>
+                            </object>
+                        </transform>
+                        <transform name="legRight1">
+                            <set>
+                                <translate>0 0 -10</translate>
+                                <rotate>-20 1 0 0</rotate>
+                                <translate>0 0 -10</translate>
+                                <translate>-5 0 0</translate>
+                                <scale>5 5 20</scale>
+                            </set>
+                            <object instanceof="box">
+                                <material>
+                                    <color>1 0 0</color>
+                                </material>
+                            </object>
+                        </transform>
+                        <transform name="legLeft2">
+                            <set>
+                                <translate>0 0 10</translate>
+                                <rotate>20 1 0 0</rotate>
+                                <translate>0 0 10</translate>
+                                <translate>5 0 0</translate>
+                                <scale>5 5 20</scale>
+                            </set>
+                            <object instanceof="box">
+                                <material>
+                                    <color>1 0 0</color>
+                                </material>
+                            </object>
+                        </transform>
+                        <transform name="legRight2">
+                            <set>
+                                <translate>0 0 -10</translate>
+                                <rotate>-20 1 0 0</rotate>
+                                <translate>0 0 -10</translate>
+                                <translate>5 0 0</translate>
+                                <scale>5 5 20</scale>
+                            </set>
+                            <object instanceof="box">
+                                <material>
+                                    <color>1 0 0</color>
+                                </material>
+                            </object>
+                        </transform>
+                        <transform name="legLeft3">
+                            <set>
+                                <translate>0 0 10</translate>
+                                <rotate>20 1 0 0</rotate>
+                                <translate>0 0 10</translate>
+                                <translate>15 0 0</translate>
+                                <scale>5 5 20</scale>
+                            </set>
+                            <object instanceof="box">
+                                <material>
+                                    <color>1 0 0</color>
+                                </material>
+                            </object>
+                        </transform>
+                        <transform name="legRight3">
+                            <set>
+                                <translate>0 0 -10</translate>
+                                <rotate>-20 1 0 0</rotate>
+                                <translate>0 0 -10</translate>
+                                <translate>15 0 0</translate>
+                                <scale>5 5 20</scale>
+                            </set>
+                            <object instanceof="box">
+                                <material>
+                                    <color>1 0 0</color>
+                                </material>
+                            </object>
+                        </transform>
+                    </group>
+                </group>
+            </transform>
+        </group>
+    </transform>
+</scene>
