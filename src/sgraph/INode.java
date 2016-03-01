@@ -78,6 +78,14 @@ public interface INode
     void setTransform(Matrix4f m) throws IllegalArgumentException;
 
     /**
+     * Set the transformation associated with this node. Not all types of nodes can have transformations.
+     * If the node cannot store a transformation, this method throws an {@link }IllegalArgumentException}
+     * @param m the tranformation matrix associated with this transformation
+     * @throws IllegalArgumentException if this node is unable to store a transformation (all nodes except TransformNode)
+     */
+    void setAnimationTransform(Matrix4f m) throws IllegalArgumentException;
+
+    /**
      * Set the material associated with this node. Not all types of nodes can have materials associated with them.
      * If the node cannot have a material, this method throws an {@link }IllegalArgumentException}
      * @param m the material object to be associated with this node

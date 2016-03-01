@@ -107,6 +107,13 @@ public abstract class AbstractNode implements INode
         throw new IllegalArgumentException(getName()+" is not a transform node");
     }
 
+    @Override
+    public void setAnimationTransform(Matrix4f t)
+    {
+        throw new IllegalArgumentException(getName()+" is not a transform node");
+    }
+
+
     /**
      * By default, throws an exception. Any nodes that are capable of storing material should
      * override this method

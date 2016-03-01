@@ -2,21 +2,20 @@
     <instance name="box" path="models/box"></instance>
     <transform>
         <set>
-            <translate>0 0 -20</translate>
-            <scale>5 5 5</scale>
+            <scale>1 1 1</scale>
         </set>
 
         <!-- transformation from bottom to up -->
         <group name="unit-height-spider">
             <transform>
                 <set>
-                    <scale>1 1 1</scale>
+                    <scale>0.05 0.05 0.05</scale>
                 </set>
                 <group name="baseGroup">
                     <group name="centerBody">
                         <transform name="centerBody">
                             <set>
-                                <scale>40 13 20</scale>
+                                <scale>40 20 20</scale>
                             </set>
                             <object instanceof="box">
                                 <material>

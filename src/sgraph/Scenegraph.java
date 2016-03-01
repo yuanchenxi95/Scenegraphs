@@ -1,6 +1,5 @@
 package sgraph;
 
-import com.jogamp.opengl.GL3;
 import org.joml.Matrix4f;
 import util.PolygonMesh;
 
@@ -100,10 +99,91 @@ public class Scenegraph implements IScenegraph
         meshes.put(name,mesh);
     }
 
-
+    // given time from 0 - 360
     @Override
     public void animate(float time) {
 
+        float radius = 300f;
+        float offset = (float) (Math.PI);
+
+        nodes.get("spiderB-transform").setAnimationTransform(new Matrix4f()
+                .rotate((float) Math.toRadians(time / 2f) + offset, 0, 1, 0)
+                .translate(radius, 0, 0)
+                .rotate((float) Math.toRadians(-90), 0, 1, 0));
+
+        nodes.get("spiderA-transform").setAnimationTransform(new Matrix4f()
+                .rotate((float) Math.toRadians(time / 2f), 0, 1, 0)
+                .translate(radius, 0, 0)
+                .rotate((float) Math.toRadians(-90), 0, 1, 0));
+        // print all the names in the map
+//        for(INode n : nodes.values())
+//            System.out.println(n.getName());
+
+        animateSpiderLegs();
+
+
+    }
+
+    // Current time count
+    int count = 0;
+
+    // Maximum time count before returning to 0
+    int loopLimit = 100;
+
+    // Time offset betwen each leg of rows
+    int offset = 20;
+
+    /**
+     * Animate the movement of spider legs
+     */
+    private void animateSpiderLegs() {
+
+        count++;
+
+        // Animation Percentages from 0 to 1.
+        float row0_percentage = (count % loopLimit) / (float) loopLimit;
+        float row1_percentage = ((count + offset) % loopLimit) / (float) loopLimit;
+        float row2_percentage = ((count + offset * 2) % loopLimit) / (float) loopLimit;
+        float row3_percentage = ((count + offset * 3) % loopLimit) / (float) loopLimit;
+
+        // Using equation: rotationAmount = 1/8 * sin(theta * 360 - 180)
+        // Both spiders' Left Side
+        nodes.get("spiderA-root-legLeft0").setAnimationTransform(new Matrix4f()
+                .rotate((float) Math.sin(Math.toRadians(row0_percentage * 360 - 180)) / 8f, 0, 1, 0));
+        nodes.get("spiderA-root-legLeft1").setAnimationTransform(new Matrix4f()
+                .rotate((float) Math.sin(Math.toRadians(row1_percentage * 360 - 180)) / 8f, 0, 1, 0));
+        nodes.get("spiderA-root-legLeft2").setAnimationTransform(new Matrix4f()
+                .rotate((float) Math.sin(Math.toRadians(row2_percentage * 360 - 180)) / 8f, 0, 1, 0));
+        nodes.get("spiderA-root-legLeft3").setAnimationTransform(new Matrix4f()
+                .rotate((float) Math.sin(Math.toRadians(row3_percentage * 360 - 180)) / 8f, 0, 1, 0));
+
+        nodes.get("spiderB-root-legLeft0").setAnimationTransform(new Matrix4f()
+                .rotate((float) Math.sin(Math.toRadians(row0_percentage * 360 - 180)) / 8f, 0, 1, 0));
+        nodes.get("spiderB-root-legLeft1").setAnimationTransform(new Matrix4f()
+                .rotate((float) Math.sin(Math.toRadians(row1_percentage * 360 - 180)) / 8f, 0, 1, 0));
+        nodes.get("spiderB-root-legLeft2").setAnimationTransform(new Matrix4f()
+                .rotate((float) Math.sin(Math.toRadians(row2_percentage * 360 - 180)) / 8f, 0, 1, 0));
+        nodes.get("spiderB-root-legLeft3").setAnimationTransform(new Matrix4f()
+                .rotate((float) Math.sin(Math.toRadians(row3_percentage * 360 - 180)) / 8f, 0, 1, 0));
+
+        // Both spiders' Right side
+        nodes.get("spiderA-root-legRight0").setAnimationTransform(new Matrix4f()
+                .rotate((float) Math.sin(Math.toRadians(row0_percentage * 360 - 180)) / 8f, 0, 1, 0));
+        nodes.get("spiderA-root-legRight1").setAnimationTransform(new Matrix4f()
+                .rotate((float) Math.sin(Math.toRadians(row1_percentage * 360 - 180)) / 8f, 0, 1, 0));
+        nodes.get("spiderA-root-legRight2").setAnimationTransform(new Matrix4f()
+                .rotate((float) Math.sin(Math.toRadians(row2_percentage * 360 - 180)) / 8f, 0, 1, 0));
+        nodes.get("spiderA-root-legLeft3").setAnimationTransform(new Matrix4f()
+                .rotate((float) Math.sin(Math.toRadians(row3_percentage * 360 - 180)) / 8f, 0, 1, 0));
+
+        nodes.get("spiderB-root-legRight0").setAnimationTransform(new Matrix4f()
+                .rotate((float) Math.sin(Math.toRadians(row0_percentage * 360 - 180)) / 8f, 0, 1, 0));
+        nodes.get("spiderB-root-legRight1").setAnimationTransform(new Matrix4f()
+                .rotate((float) Math.sin(Math.toRadians(row1_percentage * 360 - 180)) / 8f, 0, 1, 0));
+        nodes.get("spiderB-root-legRight2").setAnimationTransform(new Matrix4f()
+                .rotate((float) Math.sin(Math.toRadians(row2_percentage * 360 - 180)) / 8f, 0, 1, 0));
+        nodes.get("spiderB-root-legRight3").setAnimationTransform(new Matrix4f()
+                .rotate((float) Math.sin(Math.toRadians(row3_percentage * 360 - 180)) / 8f, 0, 1, 0));
     }
 
     @Override

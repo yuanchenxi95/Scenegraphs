@@ -55,7 +55,7 @@ public class JOGLFrame extends JFrame
                 try
                 {
                     view.init(canvas);
-                    InputStream in = getClass().getClassLoader().getResourceAsStream("scenegraphs/spider.xml");
+                    InputStream in = getClass().getClassLoader().getResourceAsStream("scenegraphs/two-spiders.xml");
                     view.initScenegraph(canvas,in);
                     textRenderer = new TextRenderer(new Font("SansSerif", Font.PLAIN, 18),true,false);
                     glAutoDrawable.getGL().setSwapInterval(1);

@@ -155,9 +155,9 @@ public class TransformNode extends AbstractNode
 
     /**
      * Gets the animation transform of this node
-     * @return
+     * @return the animation transform of this node
      */
-    Matrix4f getAnimationTransform()
+    public Matrix4f getAnimationTransform()
     {
         return animation_transform;
     }

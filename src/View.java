@@ -5,7 +5,9 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-
+import sgraph.INode;
+import sgraph.Scenegraph;
+import sgraph.TransformNode;
 
 
 import java.io.File;
@@ -38,6 +40,13 @@ public class View
     private int projectionLocation;
     private sgraph.IScenegraph scenegraph;
     private int angleOfRotation;
+
+    private enum cameraState {
+        STATIONARY,
+        ONSPIDER
+    }
+
+    private cameraState cState= cameraState.STATIONARY;
 
 
 
@@ -87,6 +96,7 @@ public class View
 
     public void draw(GLAutoDrawable gla)
     {
+        scenegraph.animate(angleOfRotation);
         angleOfRotation = (angleOfRotation+1)%360;
         GL3 gl = gla.getGL().getGL3();
 
@@ -106,9 +116,23 @@ public class View
          * Right now this matrix is identity, which means "no transformations"
          */
         modelView.push(new Matrix4f());
-        modelView.peek().lookAt(new Vector3f(0,50,80),new Vector3f(0,50,0),new Vector3f(0,1,0))
-                        .mul(trackballTransform);
 
+        switch (cState) {
+            case STATIONARY:
+                modelView.peek().lookAt(new Vector3f(0,500,400),new Vector3f(0,50,0),new Vector3f(0,1,0))
+                        .mul(trackballTransform);
+                break;
+            case ONSPIDER:
+//                INode rootNode = scenegraph.getRoot();
+
+//                Matrix4f objectToWorld = modelView.peek().mul(tn.getAnimationTransform()).mul(tn.getTransform());
+//                Matrix4f worldToObject = new Matrix4f(objectToWorld).invert();
+                modelView.peek().lookAt(new Vector3f(0,0,0),new Vector3f(-1,0,0),new Vector3f(0,1,0));
+                        //.mul(worldToObject).mul(trackballTransform);
+                break;
+            default:
+                throw new IllegalArgumentException("camera state is wrong");
+        }
 
     /*
      *Supply the shader with all the matrices it expects.
@@ -118,8 +142,8 @@ public class View
         //return;
 
 
-        gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL3.GL_LINE); //OUTLINES
-//        gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL3.GL_FILL); //OUTLINES
+//        gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL3.GL_LINE); //OUTLINES
+        gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL3.GL_FILL); //FILLED
 
         scenegraph.draw(modelView);
     /*
@@ -143,6 +167,16 @@ public class View
         if (c == 'r') {
             trackballTransform = new Matrix4f().identity();
         }
+
+        if (c == 'c') {
+            if (cState == cameraState.ONSPIDER) {
+                cState = cameraState.STATIONARY;
+
+            } else if (cState == cameraState.STATIONARY) {
+                cState = cameraState.ONSPIDER;
+            }
+        }
+
     }
 
     public void mousePressed(int x,int y)
