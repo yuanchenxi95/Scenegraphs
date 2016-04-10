@@ -17,9 +17,12 @@
                             <set>
                                 <scale>40 20 20</scale>
                             </set>
-                            <object instanceof="box">
+                            <object instanceof="box-outside" texture="checkerboard-box">
                                 <material>
-                                    <color>1 1 1</color>
+                                    <ambient>0.2 0.2 0.2</ambient>
+                                    <diffuse>0.2 0.2 0.2</diffuse>
+                                    <specular>0.2 0.2 0.2</specular>
+                                    <shininess>100</shininess>
                                 </material>
                             </object>
                         </transform>
@@ -32,7 +35,30 @@
                             </set>
                             <object instanceof="box">
                                 <material>
-                                    <color>1 0 0</color>
+                                    <ambient>1 0 0</ambient>
+                                    <diffuse>0.2 0.2 0.2</diffuse>
+                                    <specular>0.2 0.2 0.2</specular>
+                                </material>
+                            </object>
+                        </transform>
+                        <transform name="spiderEye">
+                            <set>
+                                <translate>-31 0 0</translate>
+                                <scale>2 2 2</scale>
+                            </set>
+                            <light>
+                                <ambient>1 0 0</ambient>
+                                <diffuse>0.8 0.8 0.8</diffuse>
+                                <specular>0.8 0.8 0.8</specular>
+                                <position>0 0 0</position>
+                                <spotangle>30</spotangle>
+                                <spotdirection>-1 0 0</spotdirection>
+                            </light>
+                            <object instanceof="box">
+                                <material>
+                                    <ambient>1 0 0</ambient>
+                                    <diffuse>0.2 0.2 0.2</diffuse>
+                                    <specular>0.2 0.2 0.2</specular>
                                 </material>
                             </object>
                         </transform>
@@ -48,7 +74,9 @@
                             </set>
                             <object instanceof="box">
                                 <material>
-                                    <color>1 0 0</color>
+                                    <ambient>1 0 0</ambient>
+                                    <diffuse>1 0 0</diffuse>
+                                    <specular>0.1 0.1 0.1</specular>
                                 </material>
                             </object>
                         </transform>
@@ -62,7 +90,9 @@
                             </set>
                             <object instanceof="box">
                                 <material>
-                                    <color>1 0 0</color>
+                                    <ambient>1 0 0</ambient>
+                                    <diffuse>1 0 0</diffuse>
+                                    <specular>0 0 0</specular>
                                 </material>
                             </object>
                         </transform>
@@ -76,7 +106,9 @@
                             </set>
                             <object instanceof="box">
                                 <material>
-                                    <color>1 0 0</color>
+                                    <ambient>1 0 0</ambient>
+                                    <diffuse>1 0 0</diffuse>
+                                    <specular>0 0 0</specular>
                                 </material>
                             </object>
                         </transform>
@@ -90,7 +122,9 @@
                             </set>
                             <object instanceof="box">
                                 <material>
-                                    <color>1 0 0</color>
+                                    <ambient>1 0 0</ambient>
+                                    <diffuse>0 0 0</diffuse>
+                                    <specular>0 0 0</specular>
                                 </material>
                             </object>
                         </transform>
@@ -104,7 +138,9 @@
                             </set>
                             <object instanceof="box">
                                 <material>
-                                    <color>1 0 0</color>
+                                    <ambient>1 0 0</ambient>
+                                    <diffuse>1 0 0</diffuse>
+                                    <specular>0 0 0</specular>
                                 </material>
                             </object>
                         </transform>
@@ -118,7 +154,9 @@
                             </set>
                             <object instanceof="box">
                                 <material>
-                                    <color>1 0 0</color>
+                                    <ambient>1 0 0</ambient>
+                                    <diffuse>1 0 0</diffuse>
+                                    <specular>0 0 0</specular>
                                 </material>
                             </object>
                         </transform>
@@ -132,7 +170,9 @@
                             </set>
                             <object instanceof="box">
                                 <material>
-                                    <color>1 0 0</color>
+                                    <ambient>1 0 0</ambient>
+                                    <diffuse>1 0 0</diffuse>
+                                    <specular>0 0 0</specular>
                                 </material>
                             </object>
                         </transform>
@@ -146,7 +186,9 @@
                             </set>
                             <object instanceof="box">
                                 <material>
-                                    <color>1 0 0</color>
+                                    <ambient>1 0 0</ambient>
+                                    <diffuse>1 0 0</diffuse>
+                                    <specular>0 0 0</specular>
                                 </material>
                             </object>
                         </transform>

@@ -66,6 +66,8 @@ public class GL3MeshRenderer
         glContext.glDrawElements(primitive, primitiveCount, GL.GL_UNSIGNED_INT, 0);
 
         glContext.glBindVertexArray(0);
+
+
     }
 
     public void prepare(util.PolygonMesh mesh,Map<String,Integer> shaderVariableMap) throws Exception

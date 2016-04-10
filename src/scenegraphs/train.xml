@@ -1,0 +1,199 @@
+<scene>
+    <instance name="box" path="models/box"></instance>
+    <instance name="cylinder" path="models/cylinder"></instance>
+    <transform>
+        <!-- transformation from bottom to up -->
+        <group name="unit-height-train">
+
+            <transform>
+                <!-- Scale to unit height (X 1/height) and sit object on x axis-->
+                <set>
+                    <scale>0.005714 0.005714 0.005714</scale>
+                </set>
+
+                <!-- entire train's anchor point is (0, 0, 0) -->
+                <group name="baseGroup">
+                    <group name="bodyGroup">
+
+                        <!-- Chimney -->
+                        <transform name="chimneyPart">
+                            <set>
+                                <translate>0 0 -50</translate>
+                                <translate>250 0 0</translate>
+                                <scale>30 50 30</scale>
+                            </set>
+                            <object instanceof="cylinder">
+                                <material>
+                                    <ambient>1 0 0</ambient>
+                                    <diffuse>1 1 1</diffuse>
+                                    <specular>1 1 1</specular>
+                                </material>
+                            </object>
+                        </transform>
+
+                        <!-- Carriage Body whd(300 100 100) -->
+                        <transform name="bodyPart">
+                            <set>
+                                <translate>150 -50 -50</translate>
+                                <scale>300 100 100</scale>
+                            </set>
+                            <object instanceof="box">
+                                <material>
+                                    <ambient>1 0 0</ambient>
+                                    <diffuse>1 0 0</diffuse>
+                                    <specular>1 0 0</specular>
+                                </material>
+                            </object>
+                        </transform>
+
+                        <!-- All Wheels -->
+                        <group name="wheelGroup">
+                            <transform name="wheel_R0_L">
+                                <set>
+                                    <translate>40 -100 0</translate> <!-- wheel position -->
+                                    <rotate>90 1 0 0</rotate>
+                                    <scale>25 20 25</scale> <!-- wheel radius of 25, thickness of 10 -->
+                                </set>
+                                <object instanceof="cylinder">
+                                    <material>
+                                        <ambient>0.2 0.2 0.2</ambient>
+                                        <diffuse>0.2 0.2 0.2</diffuse>
+                                        <specular>0.2 0.2 0.2</specular>
+                                    </material>
+                                </object>
+                            </transform>
+                            <transform name="wheel_R1_L">
+                                <set>
+                                    <translate>100 -100 0</translate> <!-- wheel position -->
+                                    <rotate>90 1 0 0</rotate>
+                                    <scale>25 20 25</scale> <!-- wheel radius of 25 -->
+                                </set>
+                                <object instanceof="cylinder">
+                                    <material>
+                                        <ambient>0.2 0.2 0.2</ambient>
+                                        <diffuse>0.2 0.2 0.2</diffuse>
+                                        <specular>0.2 0.2 0.2</specular>
+                                    </material>
+                                </object>
+                            </transform>
+                            <transform name="wheel_R2_L">
+                                <set>
+                                    <translate>160 -100 0</translate> <!-- wheel position -->
+                                    <rotate>90 1 0 0</rotate>
+                                    <scale>25 20 25</scale> <!-- wheel radius of 25 -->
+                                </set>
+                                <object instanceof="cylinder">
+                                    <material>
+                                        <ambient>0.2 0.2 0.2</ambient>
+                                        <diffuse>0.2 0.2 0.2</diffuse>
+                                        <specular>0.2 0.2 0.2</specular>
+                                    </material>
+                                </object>
+                            </transform>
+                            <transform name="wheel_R3_L">
+                                <set>
+                                    <translate>220 -100 0</translate> <!-- wheel position -->
+                                    <rotate>90 1 0 0</rotate>
+                                    <scale>25 20 25</scale> <!-- wheel radius of 25 -->
+                                </set>
+                                <object instanceof="cylinder">
+                                    <material>
+                                        <ambient>0.2 0.2 0.2</ambient>
+                                        <diffuse>0.2 0.2 0.2</diffuse>
+                                        <specular>0.2 0.2 0.2</specular>
+                                    </material>
+                                </object>
+                            </transform>
+
+
+                            <transform name="wheel_R0_R">
+                                <set>
+                                    <translate>0 0 -20</translate> <!-- -wheel thickness / 2-->
+                                    <translate>40 -100 -100</translate> <!-- wheel position -->
+                                    <rotate>90 1 0 0</rotate>
+                                    <scale>25 20 25</scale> <!-- wheel radius of 25 -->
+                                </set>
+                                <object instanceof="cylinder">
+                                    <material>
+                                        <ambient>0.2 0.2 0.2</ambient>
+                                        <diffuse>0.2 0.2 0.2</diffuse>
+                                        <specular>0.2 0.2 0.2</specular>
+                                    </material>
+                                </object>
+                            </transform>
+                            <transform name="wheel_R1_R">
+                                <set>
+                                    <translate>0 0 -20</translate> <!-- -wheel thickness / 2-->
+                                    <translate>100 -100 -100</translate> <!-- wheel position -->
+                                    <rotate>90 1 0 0</rotate>
+                                    <scale>25 20 25</scale> <!-- wheel radius of 25 -->
+                                </set>
+                                <object instanceof="cylinder">
+                                    <material>
+                                        <ambient>0.2 0.2 0.2</ambient>
+                                        <diffuse>0.2 0.2 0.2</diffuse>
+                                        <specular>0.2 0.2 0.2</specular>
+                                    </material>
+                                </object>
+                            </transform>
+                            <transform name="wheel_R2_R">
+                                <set>
+                                    <translate>0 0 -20</translate> <!-- -wheel thickness / 2-->
+                                    <translate>160 -100 -100</translate> <!-- wheel position -->
+                                    <rotate>90 1 0 0</rotate>
+                                    <scale>25 20 25</scale> <!-- wheel radius of 25 -->
+                                </set>
+                                <object instanceof="cylinder">
+                                    <material>
+                                        <ambient>0.2 0.2 0.2</ambient>
+                                        <diffuse>0.2 0.2 0.2</diffuse>
+                                        <specular>0.2 0.2 0.2</specular>
+                                    </material>
+                                </object>
+                            </transform>
+                            <transform name="wheel_R3_R">
+                                <set>
+                                    <translate>0 0 -20</translate> <!-- -wheel thickness / 2-->
+                                    <translate>220 -100 -100</translate> <!-- wheel position -->
+                                    <rotate>90 1 0 0</rotate>
+                                    <scale>25 20 25</scale> <!-- wheel radius of 25 -->
+                                </set>
+                                <object instanceof="cylinder">
+                                    <material>
+                                        <ambient>0.2 0.2 0.2</ambient>
+                                        <diffuse>0.2 0.2 0.2</diffuse>
+                                        <specular>0.2 0.2 0.2</specular>
+                                    </material>
+                                </object>
+                            </transform>
+                        </group>
+                    </group>
+
+                    <!-- A smaller, flat box centered in front of the train-->
+                    <transform name="headPart">
+                        <set>
+                            <translate>10 0 0</translate>
+                            <translate>300 -50 -50</translate>
+                            <scale>10 65 65</scale>
+                        </set>
+                        <light>
+                            <ambient>1 1 1</ambient>
+                            <diffuse>0.8 0.8 0.8</diffuse>
+                            <specular>0.8 0.8 0.8</specular>
+                            <position>0 0 0</position>
+                            <spotangle>30</spotangle>
+                            <spotdirection>1 0 0</spotdirection>
+                        </light>
+                        <object instanceof="box">
+                            <material>
+                                <ambient>0.8 0.8 0.8</ambient>
+                                <diffuse>0.8 0.2 0.2</diffuse>
+                                <specular>0.2 0.2 0.2</specular>
+                            </material>
+                        </object>
+                    </transform>
+                </group>
+            </transform>
+        </group>
+    </transform>
+</scene>

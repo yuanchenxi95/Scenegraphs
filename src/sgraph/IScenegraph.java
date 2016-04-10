@@ -1,9 +1,7 @@
 package sgraph;
 
-import com.jogamp.opengl.GL3;
-import com.jogamp.opengl.GLAutoDrawable;
 import org.joml.Matrix4f;
-import util.ShaderProgram;
+import sgraph.Nodes.INode;
 
 import java.util.Map;
 import java.util.Stack;
@@ -54,6 +52,12 @@ public interface IScenegraph
      */
     void addPolygonMesh(String name,util.PolygonMesh obj);
 
+    /**
+     * Add a texture Image that will be used by one or more leaves in this scene graph
+     * @param name a unique name by which this texture image may be referred to in future
+     * @param textureImage the {@link util.TextureImage} object
+     */
+    void addTextureImage(String name, util.TextureImage textureImage);
     /**
      * Specific scene graph implementations should put code that animates specific nodes in the
      * scene graph, based on a time provided by the caller

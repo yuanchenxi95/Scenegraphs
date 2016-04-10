@@ -1,7 +1,10 @@
 package sgraph;
 
 import org.joml.Matrix4f;
+import sgraph.Nodes.INode;
+import util.Light;
 import util.PolygonMesh;
+import util.TextureImage;
 
 import java.util.*;
 
@@ -23,6 +26,11 @@ public class Scenegraph implements IScenegraph
     protected Map<String,util.PolygonMesh> meshes;
 
     /**
+     * A map to store the (name,textureImage) pairs. A map is chose for efficient search
+     */
+    protected Map<String, util.TextureImage> textureImages;
+
+    /**
      * A map to store the (name,node) pairs. A map is chosen for efficient search
      */
     protected Map<String,INode> nodes;
@@ -39,6 +47,7 @@ public class Scenegraph implements IScenegraph
         root = null;
         meshes = new TreeMap<String,util.PolygonMesh>();
         nodes = new TreeMap<String,INode>();
+        textureImages = new TreeMap<String, TextureImage>();
     }
 
     public void dispose()
@@ -56,12 +65,20 @@ public class Scenegraph implements IScenegraph
     @Override
     public void setRenderer(IScenegraphRenderer renderer) throws Exception {
         this.renderer = renderer;
+        List<Light> lol = this.getRoot().getAllLights(new Matrix4f());
+        this.renderer.addLights(lol);
 
         //now add all the meshes
         for (String meshName:meshes.keySet())
         {
             this.renderer.addMesh(meshName,meshes.get(meshName));
         }
+        for (String texName : textureImages.keySet()) {
+            System.out.println();
+            this.renderer.addTexture(texName, textureImages.get(texName));
+        }
+
+
 
     }
 
@@ -86,6 +103,9 @@ public class Scenegraph implements IScenegraph
      */
     @Override
     public void draw(Stack<Matrix4f> modelView) {
+
+
+
         if ((root!=null) && (renderer!=null))
         {
             renderer.draw(root,modelView);
@@ -99,20 +119,50 @@ public class Scenegraph implements IScenegraph
         meshes.put(name,mesh);
     }
 
+    @Override
+    public void addTextureImage(String name, TextureImage textureImage) {
+        textureImages.put(name, textureImage);
+    }
+
+    boolean trainTransformFlag = true;
+
     // given time from 0 - 360
     @Override
     public void animate(float time) {
 
         float radius = 300f;
-        float offset = (float) (Math.PI);
+        //////////////////////////////////////
+        // for test head part light
+        if (trainTransformFlag) {
+            if (time * 2 == 718) {
+                trainTransformFlag = false;
+            }
+            nodes.get("train-transform").setAnimationTransform(
+                new Matrix4f().translate(time * 2, 0, 0));
+        } else {
+            if (time * 2 == 718) {
+                trainTransformFlag = true;
+            }
+            nodes.get("train-transform").setAnimationTransform(
+                    new Matrix4f().translate(720 - time * 2, 0, 0));
+        }
+
+//        nodes.get("train-transform").setAnimationTransform(
+//                new Matrix4f().rotate((float) Math.toRadians(time), 0, 1, 0));
+//                new Matrix4f().translate(0.5f * time, 0, 0));
+
+        //////////////////////////////////////
+
+
+        float offset = (float) (Math.PI / 2);
 
         nodes.get("spiderB-transform").setAnimationTransform(new Matrix4f()
-                .rotate((float) Math.toRadians(time / 2f) + offset, 0, 1, 0)
+                .rotate((float) Math.toRadians(time) + offset, 0, 1, 0)
                 .translate(radius, 0, 0)
                 .rotate((float) Math.toRadians(-90), 0, 1, 0));
 
         nodes.get("spiderA-transform").setAnimationTransform(new Matrix4f()
-                .rotate((float) Math.toRadians(time / 2f), 0, 1, 0)
+                .rotate((float) Math.toRadians(time), 0, 1, 0)
                 .translate(radius, 0, 0)
                 .rotate((float) Math.toRadians(-90), 0, 1, 0));
         // print all the names in the map
@@ -139,13 +189,11 @@ public class Scenegraph implements IScenegraph
     private void animateSpiderLegs() {
 
         count++;
-
         // Animation Percentages from 0 to 1.
         float row0_percentage = (count % loopLimit) / (float) loopLimit;
         float row1_percentage = ((count + offset) % loopLimit) / (float) loopLimit;
         float row2_percentage = ((count + offset * 2) % loopLimit) / (float) loopLimit;
         float row3_percentage = ((count + offset * 3) % loopLimit) / (float) loopLimit;
-
         // Using equation: rotationAmount = 1/8 * sin(theta * 360 - 180)
         // Both spiders' Left Side
         nodes.get("spiderA-root-legLeft0").setAnimationTransform(new Matrix4f()
@@ -199,7 +247,7 @@ public class Scenegraph implements IScenegraph
 
     @Override
     public Map<String, PolygonMesh> getPolygonMeshes() {
-       Map<String,util.PolygonMesh> meshes = new TreeMap<String,PolygonMesh>();
+        Map<String,util.PolygonMesh> meshes = new TreeMap<String,PolygonMesh>();
 
         meshes.putAll(this.meshes);
         return meshes;

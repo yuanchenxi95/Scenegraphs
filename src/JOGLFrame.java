@@ -1,7 +1,4 @@
-import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLEventListener;
-import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.AnimatorBase;
@@ -25,7 +22,8 @@ public class JOGLFrame extends JFrame
     private View view;
     private TextRenderer textRenderer;
     private GLCanvas canvas;
-    public JOGLFrame(String title)
+    public static GL3 glForShare;
+    JOGLFrame(String title)
     {
         //routine JFrame setting stuff
         super(title);
@@ -54,6 +52,7 @@ public class JOGLFrame extends JFrame
             public void init(GLAutoDrawable glAutoDrawable) { //called the first time this canvas is created. Do your initialization here
                 try
                 {
+                    glForShare = glAutoDrawable.getGL().getGL3();
                     view.init(canvas);
                     InputStream in = getClass().getClassLoader().getResourceAsStream("scenegraphs/two-spiders.xml");
                     view.initScenegraph(canvas,in);
@@ -69,11 +68,14 @@ public class JOGLFrame extends JFrame
 
             @Override
             public void dispose(GLAutoDrawable glAutoDrawable) { //called when the canvas is destroyed.
+
+                glForShare = glAutoDrawable.getGL().getGL3();
                 view.dispose(glAutoDrawable);
             }
 
             @Override
             public void display(GLAutoDrawable glAutoDrawable) { //called every time this window must be redrawn
+                glForShare = glAutoDrawable.getGL().getGL3();
                 view.draw(canvas);
 //                textRenderer.beginRendering(canvas.getWidth(), canvas.getHeight());
                 // optionally set the color
@@ -85,6 +87,7 @@ public class JOGLFrame extends JFrame
 
             @Override
             public void reshape(GLAutoDrawable glAutoDrawable, int x, int y, int width, int height) { //called every time this canvas is resized
+                glForShare = glAutoDrawable.getGL().getGL3();
                 view.reshape(glAutoDrawable,x,y,width,height);
                 repaint(); //refresh window
             }
@@ -105,11 +108,12 @@ public class JOGLFrame extends JFrame
 
         @Override
         public void keyPressed(KeyEvent e) {
+            JOGLFrame.this.view.keyPressed(e.getKeyChar());
         }
 
         @Override
         public void keyReleased(KeyEvent e) {
-
+            JOGLFrame.this.view.keyReleased(e.getKeyChar());
         }
     }
 

@@ -92,7 +92,7 @@ public class Material
         specular.x = r;
         specular.y = g;
         specular.z = b;
-        specular.z = 1;
+        specular.w = 1;
     }
 
     public void setSpecular(Vector4f v)

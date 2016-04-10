@@ -1,22 +1,12 @@
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.*;
-import com.jogamp.opengl.util.GLBuffers;
-import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
-import sgraph.INode;
-import sgraph.Scenegraph;
-import sgraph.TransformNode;
+import org.joml.*;
+import sgraph.Nodes.INode;
 
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Stack;
 
 
@@ -31,6 +21,7 @@ public class View
     private int WINDOW_WIDTH,WINDOW_HEIGHT;
     private Stack<Matrix4f> modelView;
     private Matrix4f projection,trackballTransform;
+    private Matrix3f keyBoardTransform;
     private float trackballRadius;
     private Vector2f mousePos;
     private util.ObjectInstance meshObject;
@@ -41,12 +32,24 @@ public class View
     private sgraph.IScenegraph scenegraph;
     private int angleOfRotation;
 
+    private HashMap<Character, Boolean> cameraMoveCharMap;
+
+
+    //INVARIANT lookAtPositionInit.equals(cameraPositionInit)
+    private final Vector3f cameraPositionInit = new Vector3f(0, 300, 400);
+
+    private Vector3f cameraPosition = new Vector3f(cameraPositionInit);
+    Vector3f upVector;
+
+
+
     private enum cameraState {
         STATIONARY,
-        ONSPIDER
+        ONSPIDER,
+        KEYCONTROL,
     }
 
-    private cameraState cState= cameraState.STATIONARY;
+    private cameraState cState= cameraState.KEYCONTROL;
 
 
 
@@ -56,9 +59,26 @@ public class View
         modelView = new Stack<Matrix4f>();
         angleOfRotation = 0;
         trackballRadius = 300;
+
+
+        resetMoveCamera();
+
+
+    }
+
+    private void resetMoveCamera() {
+        // initialize keyboard control
+        cameraMoveCharMap = new HashMap<Character, Boolean>();
+        cameraMoveCharMap.put('w',false);
+        cameraMoveCharMap.put('s',false);
+        cameraMoveCharMap.put('a',false);
+        cameraMoveCharMap.put('d',false);
+        keyBoardTransform = new Matrix3f();
+        upVector = new Vector3f(0, 1,0);
         trackballTransform = new Matrix4f();
 
     }
+
 
     public void initScenegraph(GLAutoDrawable gla,InputStream in) throws Exception
     {
@@ -85,7 +105,9 @@ public class View
         //compile and make our shader program. Look at the ShaderProgram class for details on how this is done
         program = new util.ShaderProgram();
 
-        program.createProgram(gl,"shaders/triangles.vert","shaders/triangles.frag");
+//        program.createProgram(gl,"shaders/phong-multiple.vert","shaders/phong-multiple.frag");
+//        program.createProgram(gl,"shaders/outline.vert","shaders/outline.frag");
+        program.createProgram(gl,"shaders/toonShading.vert","shaders/toonShading.frag");
 
 
         //get input variables that need to be given to the shader program
@@ -98,11 +120,18 @@ public class View
     {
         scenegraph.animate(angleOfRotation);
         angleOfRotation = (angleOfRotation+1)%360;
+
+
+
+
         GL3 gl = gla.getGL().getGL3();
 
-        gl.glClearColor(0, 0, 0, 1);
+//        gl.glClearColor(1, 1, 1, 1); // White
+        gl.glClearColor(0, 0, 0, 1); // Black
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT);
         gl.glEnable(GL.GL_DEPTH_TEST);
+
+
 
 
         program.enable(gl);
@@ -117,22 +146,62 @@ public class View
          */
         modelView.push(new Matrix4f());
 
+
+
+
+
         switch (cState) {
             case STATIONARY:
-                modelView.peek().lookAt(new Vector3f(0,500,400),new Vector3f(0,50,0),new Vector3f(0,1,0))
+                modelView.peek().lookAt(new Vector3f(0,500,500),new Vector3f(0,50,0),new Vector3f(0,1,0))
                         .mul(trackballTransform);
                 break;
             case ONSPIDER:
-//                INode rootNode = scenegraph.getRoot();
 
-//                Matrix4f objectToWorld = modelView.peek().mul(tn.getAnimationTransform()).mul(tn.getTransform());
-//                Matrix4f worldToObject = new Matrix4f(objectToWorld).invert();
-                modelView.peek().lookAt(new Vector3f(0,0,0),new Vector3f(-1,0,0),new Vector3f(0,1,0));
-                        //.mul(worldToObject).mul(trackballTransform);
+                // camera matrix
+                Matrix4f cameraMatrix = new Matrix4f(modelView.peek());
+
+                INode n = scenegraph.getNodes().get("spiderA-root-spiderEye");
+                if (n == null) {
+                    throw new NullPointerException("Cannot find the head");
+                }
+                Matrix4f om = new Matrix4f().identity();
+                Matrix4f objectToView = n.getObjectToViewTransform(new Matrix4f(), new Matrix4f(cameraMatrix));
+                Matrix4f viewToObject = new Matrix4f(objectToView).invert();
+
+                modelView.peek()
+                        .lookAt(new Vector3f(-1,0,0),new Vector3f(-2,0,0),new Vector3f(0,1,0))
+                        .mul(viewToObject);
+                break;
+            case KEYCONTROL:
+
+                moveCamera();
+
+                // Don't Change anything
+                Vector3f rotate = new Vector3f(0,0,-1).mul(new Matrix3f(keyBoardTransform));
+                upVector = new Vector3f(0,1,0).mul(new Matrix3f(keyBoardTransform));
+
+                // System.out.println(rotate.dot(upVector));
+
+                modelView.peek().lookAt(cameraPosition,new Vector3f(cameraPosition).add(rotate), upVector);
+
+
+
                 break;
             default:
                 throw new IllegalArgumentException("camera state is wrong");
         }
+
+
+
+
+
+
+
+
+//        System.out.println("End camera");
+
+
+
 
     /*
      *Supply the shader with all the matrices it expects.
@@ -155,6 +224,7 @@ public class View
      *
      *If you would like OpenGL to start drawing and wait until it is done, call glFinish() instead.
      */
+
         gl.glFlush();
 
         program.disable(gl);
@@ -163,21 +233,89 @@ public class View
 
     }
 
+
     public void keyTyped(char c) {
         if (c == 'r') {
             trackballTransform = new Matrix4f().identity();
+
+
+           cameraPosition = new Vector3f(cameraPositionInit);
+            resetMoveCamera();
         }
 
         if (c == 'c') {
             if (cState == cameraState.ONSPIDER) {
-                cState = cameraState.STATIONARY;
+                cState = cameraState.KEYCONTROL;
 
             } else if (cState == cameraState.STATIONARY) {
                 cState = cameraState.ONSPIDER;
+            } else if (cState == cameraState.KEYCONTROL) {
+                cState = cameraState.STATIONARY;
             }
         }
 
+
+
     }
+
+    public void keyPressed(char c) {
+        System.out.println("press " + c);
+        if (cameraState.KEYCONTROL == cState) {
+            if (c == 'w' || c == 's' || c == 'a' || c == 'd') {
+                cameraMoveCharMap.put(c, true);
+            }
+        }
+    }
+
+    public void keyReleased(char c) {
+        System.out.println("release " + c);
+        if (cameraState.KEYCONTROL == cState) {
+            if (c == 'w' || c == 's' || c == 'a' || c == 'd') {
+                cameraMoveCharMap.put(c, false);
+            }
+        }
+
+
+    }
+
+    private void moveCamera() {
+
+        if (cState != cameraState.KEYCONTROL) return;
+
+        for (Character cameraMoveChar : cameraMoveCharMap.keySet()) {
+
+            if (cameraMoveCharMap.get('w')) {
+
+                Vector3f temp = new Vector3f(0, 0, -4);
+                temp = temp.mul(keyBoardTransform);
+
+                cameraPosition.add(temp);
+            }
+            if (cameraMoveCharMap.get('s')) {
+                Vector3f temp = new Vector3f(0, 0, 4);
+                temp = temp.mul(keyBoardTransform);
+
+                cameraPosition.add(temp);
+            }
+            if (cameraMoveCharMap.get('a')) {
+                Vector3f temp = new Vector3f(-4, 0, 0);
+                temp = temp.mul(keyBoardTransform);
+
+                cameraPosition.add(temp);
+            }
+            if (cameraMoveCharMap.get('d')) {
+                Vector3f temp = new Vector3f(4, 0, 0);
+                temp = temp.mul(keyBoardTransform);
+
+                cameraPosition.add(temp);
+            }
+        }
+
+
+
+    }
+
+
 
     public void mousePressed(int x,int y)
     {
@@ -191,14 +329,29 @@ public class View
 
     public void mouseDragged(int x,int y)
     {
-        Vector2f newM = new Vector2f(x,y);
+        if (cState != cameraState.ONSPIDER) {
+            Vector2f newM = new Vector2f(x, y);
 
-        Vector2f delta = new Vector2f(newM.x-mousePos.x,newM.y-mousePos.y);
-        mousePos = new Vector2f(newM);
+            Vector2f delta = new Vector2f(newM.x - mousePos.x, newM.y - mousePos.y);
+            mousePos = new Vector2f(newM);
 
-        trackballTransform = new Matrix4f().rotate(delta.x/trackballRadius,0,1,0)
-                                           .rotate(delta.y/trackballRadius,1,0,0)
-                                           .mul(trackballTransform);
+            Matrix4f rotationMatrix = new Matrix4f().rotate(delta.x / trackballRadius, 0, 1, 0)
+                    .rotate(delta.y / trackballRadius, 1, 0, 0);
+
+            if (cState == cameraState.STATIONARY) {
+                trackballTransform = new Matrix4f()
+                        .rotate(delta.x / trackballRadius, 0, 1, 0)
+                        .rotate(delta.y / trackballRadius, 1, 0, 0).mul(trackballTransform);
+            }
+
+            if (cState == cameraState.KEYCONTROL) {
+                keyBoardTransform =
+                        new Matrix3f().mul(keyBoardTransform).rotate(-delta.x / trackballRadius, 0, 1, 0)
+                        .rotate(-delta.y / trackballRadius, 1, 0, 0);
+
+            }
+        }
+
     }
 
     public void reshape(GLAutoDrawable gla,int x,int y,int width,int height)
@@ -208,8 +361,8 @@ public class View
         WINDOW_HEIGHT = height;
         gl.glViewport(0, 0, width, height);
 
-//        projection = new Matrix4f().perspective((float)Math.toRadians(120.0f),(float)width/height,0.1f,10000.0f);
-        projection = new Matrix4f().ortho(-400,400,-400,400,0.1f,10000.0f);
+        projection = new Matrix4f().perspective((float)Math.toRadians(120.0f),(float)width/height,0.1f,10000.0f);
+//        projection = new Matrix4f().ortho(-400,400,-400,400,0.1f,10000.0f);
 
     }
 

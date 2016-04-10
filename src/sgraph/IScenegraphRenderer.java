@@ -1,7 +1,11 @@
 package sgraph;
 
 import org.joml.Matrix4f;
+import sgraph.Nodes.INode;
+import util.Light;
+import util.Material;
 
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -49,19 +53,42 @@ public interface IScenegraphRenderer
     void addMesh(String name,util.PolygonMesh mesh) throws Exception;
 
     /**
+     * Add a texture to be rendered in the future
+     * @param name the name by which this texture is refered to by the scene graph
+     * @param tex the {@link util.TextureImage} object that represents this mesh
+     * @throws Exception general mechanism to let the scene graph know of any problems
+     */
+    void addTexture(String name, util.TextureImage tex) throws Exception;
+
+    /**
+     * Add lights to be rendered in the future
+     * @param lights the list of lights needed to be added in
+     * @throws Exception general mechanism to let the scene graph know of any problems
+     */
+    void addLights(List<Light> lights) throws Exception;
+
+    /**
      * Draw the scene graph rooted at supplied node using the supplied modelview stack.
      * This is usually called by the scene graph
      * @param root
      * @param modelView
      */
-    void draw(INode root,Stack<Matrix4f> modelView);
+    void draw(INode root, Stack<Matrix4f> modelView);
 
     /**
      * Draw a specific mesh. This is called from a leaf node of the associated scene graph
      * @param name
      * @param material
      * @param transformation
+     * @param texture
      */
-    void drawMesh(String name, util.Material material,final Matrix4f transformation);
+    void drawMesh(String name, Material material, final Matrix4f transformation, String texture);
+
+    /**
+     * Draw a specific light.
+     * @param lol the list of lights
+     */
+    void drawLight(List<Light> lol);
+
     void dispose();
 }
